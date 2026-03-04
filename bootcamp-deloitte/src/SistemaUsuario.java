@@ -29,7 +29,7 @@ public class SistemaUsuario {
                 System.out.println("\nDigite a posição do usuario: ");
                 int posicaoUsuario = input.nextInt();
                 input.nextLine();
-                if (posicaoUsuario > usuarios.size()) {
+                if (posicaoUsuario < 0 || posicaoUsuario >= usuarios.size()) {
                     System.out.println("Esse usuário não existe!");
                     continue;
                 }
@@ -47,6 +47,10 @@ public class SistemaUsuario {
                 System.out.println("\nDigite a posição do usuario: ");
                 int posicaoUsuario = input.nextInt();
                 input.nextLine();
+                if (posicaoUsuario < 0 || posicaoUsuario >= usuarios.size()) {
+                    System.out.println("Esse usuário não existe!");
+                    continue;
+                }
                 System.out.println("Digite o novo nome do usuario: ");
                 String novoNome = input.nextLine();
                 usuarios.set(posicaoUsuario, novoNome);
@@ -54,7 +58,7 @@ public class SistemaUsuario {
             } else if (respostaInput == 5) {
                 System.out.println("\nDigite a posição do usuario: ");
                 int posicaoUsuario = input.nextInt();
-                if (usuarios.isEmpty() || posicaoUsuario > usuarios.size()) {
+                if (usuarios.isEmpty() || posicaoUsuario < 0 || posicaoUsuario >= usuarios.size()) {
                     System.out.println("\nNão existe");
                     continue;
                 }
