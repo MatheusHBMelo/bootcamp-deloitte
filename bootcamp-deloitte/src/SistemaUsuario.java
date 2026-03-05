@@ -1,11 +1,9 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class SistemaUsuario {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        List<String> usuarios = new ArrayList<>();
+        GerenciadorUsuario gerenciadorUsuario = new GerenciadorUsuario();
         int respostaInput;
         int posicaoUsuario;
 
@@ -18,84 +16,63 @@ public class SistemaUsuario {
             System.out.println("6 - Sair\n");
 
             System.out.print("Digite qual operação deseja realizar: ");
-
-            respostaInput = input.nextInt();
-            input.nextLine();
+            try {
+                String entrada = input.nextLine();
+                respostaInput = Integer.parseInt(entrada);
+            } catch (NumberFormatException e) {
+                respostaInput = 0;
+            }
 
             switch (respostaInput) {
-
                 case 1:
-                    System.out.print("\nDigite o nome do novo usuario: ");
-                    String nomeNovoUsuario = input.nextLine();
+                    System.out.print("\nNome: ");
+                    String nome = input.nextLine();
+                    System.out.print("Email: ");
+                    String email = input.nextLine();
+                    System.out.print("Senha: ");
+                    String senha = input.nextLine();
 
-                    usuarios.add(nomeNovoUsuario);
-
-                    System.out.println("\nUsuario cadastrado com sucesso!");
+                    gerenciadorUsuario.adicionarUsuario(new Usuario(nome, email, senha));
                     break;
-
                 case 2:
                     System.out.print("\nDigite a posição do usuario: ");
                     posicaoUsuario = input.nextInt();
                     input.nextLine();
 
-                    if (posicaoUsuario < 0 || posicaoUsuario >= usuarios.size()) {
-                        System.out.println("\nEsse usuário não existe!");
-                        continue;
-                    }
-
-                    System.out.println("\nUsuario " + posicaoUsuario + ": " + usuarios.get(posicaoUsuario));
+                    gerenciadorUsuario.listarUsuario(posicaoUsuario);
                     break;
-
                 case 3:
-                    if (usuarios.isEmpty()) {
-                        System.out.println("\nA lista de usuarios está vazia!");
-                        continue;
-                    }
-
-                    System.out.println("\nLista de usuarios: \n");
-                    for (int i = 0; i < usuarios.size(); i++) {
-                        System.out.println("Usuario " + i + ": " + usuarios.get(i));
-                    }
-
+                    gerenciadorUsuario.listarTodosUsuarios();
                     break;
-
                 case 4:
                     System.out.print("\nDigite a posição do usuario: ");
                     posicaoUsuario = input.nextInt();
                     input.nextLine();
 
-                    if (posicaoUsuario < 0 || posicaoUsuario >= usuarios.size()) {
-                        System.out.println("\nEsse usuário não existe!");
-                        continue;
+                    if (gerenciadorUsuario.posicaoInvalida(posicaoUsuario)) {
+                        System.out.println("\nErro: Usuário na posição " + posicaoUsuario + " não existe!");
+                        break;
                     }
 
-                    System.out.print("\nDigite o novo nome do usuario: ");
+                    System.out.print("\nNovo nome: ");
                     String novoNome = input.nextLine();
+                    System.out.print("Novo email: ");
+                    String novoEmail = input.nextLine();
+                    System.out.print("Nova senha: ");
+                    String novaSenha = input.nextLine();
 
-                    usuarios.set(posicaoUsuario, novoNome);
-
-                    System.out.println("\nUsuario editado com sucesso!");
+                    gerenciadorUsuario.editarUsuario(posicaoUsuario, new Usuario(novoNome, novoEmail, novaSenha));
                     break;
-
                 case 5:
-                    System.out.print("\nDigite a posição do usuario: ");
+                    System.out.print("\nDigite a posição que deseja apagar: ");
                     posicaoUsuario = input.nextInt();
                     input.nextLine();
 
-                    if (usuarios.isEmpty() || posicaoUsuario < 0 || posicaoUsuario >= usuarios.size()) {
-                        System.out.println("\nEsse usuário não existe!");
-                        continue;
-                    }
-
-                    usuarios.remove(posicaoUsuario);
-
-                    System.out.println("\nUsuario removido com sucesso!");
+                    gerenciadorUsuario.removerUsuario(posicaoUsuario);
                     break;
-
                 case 6:
                     System.out.println("\nPrograma encerrado com sucesso!");
                     break;
-
                 default:
                     System.out.println("\nOpção inválida! Escolha entre 1 e 6.");
             }
