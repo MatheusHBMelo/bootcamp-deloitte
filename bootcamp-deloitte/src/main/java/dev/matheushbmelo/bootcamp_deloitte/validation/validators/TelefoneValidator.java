@@ -17,15 +17,15 @@ public class TelefoneValidator implements UsuarioValidation {
     @Override
     public void validar(UsuarioRequestDto usuario) {
         if (usuario.telefone() == null || usuario.telefone().isBlank()) {
-            throw new UsuarioValidationException("Telefone obrigatorio: informe o telefone do usuario");
+            throw new UsuarioValidationException("Telefone obrigatório: informe o telefone do usuario!");
         }
 
         if (usuario.telefone().length() < 9 || usuario.telefone().length() > 11) {
-            throw new UsuarioValidationException("Telefone invalido: deve conter 9 ou 11 dígitos.");
+            throw new UsuarioValidationException("Telefone inválido: deve conter 9 ou 11 dígitos!");
         }
 
         if (!usuario.telefone().matches("\\d+")) {
-            throw new UsuarioValidationException("Telefone invalido: apenas números são permitidos.");
+            throw new UsuarioValidationException("Telefone inválido: apenas números são permitidos!");
         }
 
         if (this.usuarioRepository.existsByTelefone(usuario.telefone())) {

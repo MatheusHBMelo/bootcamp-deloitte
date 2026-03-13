@@ -16,17 +16,17 @@ public class CPFValidator implements UsuarioValidation {
     @Override
     public void validar(UsuarioRequestDto usuario) {
         if (usuario.cpf() == null || usuario.cpf().isBlank()) {
-            throw new UsuarioValidationException("CPF obrigatorio: digite o cpf do usuario!");
+            throw new UsuarioValidationException("CPF obrigatório: digite o cpf do usuario!");
         }
 
         String cpf = usuario.cpf().replaceAll("\\D", "");
 
         if (cpf.trim().length() != 11) {
-            throw new UsuarioValidationException("CPF invalido: deve conter 11 dígitos.");
+            throw new UsuarioValidationException("CPF invalido: deve conter 11 dígitos!");
         }
 
         if (!cpf.matches("\\d{11}")) {
-            throw new UsuarioValidationException("CPF invalido: apenas números são permitidos.");
+            throw new UsuarioValidationException("CPF inválido: apenas números são permitidos!");
         }
 
         if (this.cpfExistenteValidator.buscarCpfExistente(usuario.cpf())) {

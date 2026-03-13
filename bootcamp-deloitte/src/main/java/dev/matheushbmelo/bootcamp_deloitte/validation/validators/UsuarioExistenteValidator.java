@@ -15,6 +15,6 @@ public class UsuarioExistenteValidator {
 
     public Usuario buscarUsuarioExistentePorId(Long id) {
         return usuarioRepository.findById(id)
-                .orElseThrow(() -> new UsuarioNotFoundException("Usuario de ID " + id + " não encontrado"));
+                .orElseThrow(() -> new UsuarioNotFoundException("Usuário de ID " + id + " não encontrado."));
     }
 }

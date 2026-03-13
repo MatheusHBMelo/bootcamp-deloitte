@@ -1,9 +1,13 @@
 package dev.matheushbmelo.bootcamp_deloitte.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "TB_USERS")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,17 +19,6 @@ public class Usuario {
     public String cpf;
     @Column(unique = true)
     public String telefone;
-
-    public Usuario() {
-    }
-
-    public Usuario(Long id, String nome,String email, String cpf,  String telefone) {
-        this.id = id;
-        this.nome = nome;
-        this.email = email;
-        this.cpf = cpf;
-        this.telefone = telefone;
-    }
 
     @Override
     public String toString() {

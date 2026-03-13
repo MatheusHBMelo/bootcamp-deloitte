@@ -12,15 +12,15 @@ public class NomeValidator implements UsuarioValidation {
         final String NOME_REGEX = "^[A-Za-zÀ-ÿ ]+$";
 
         if (usuario.nome() == null || usuario.nome().isBlank()) {
-            throw new UsuarioValidationException("Nome obrigatorio: digite um nome para o usuário.");
+            throw new UsuarioValidationException("Nome obrigatório: digite um nome para o usuário!");
         }
 
         if (usuario.nome().trim().length() < 3) {
-            throw new UsuarioValidationException("Nome invalido: deve conter no mínimo 3 letras!");
+            throw new UsuarioValidationException("Nome inválido: deve conter no mínimo 3 letras!");
         }
 
         if (!usuario.nome().matches(NOME_REGEX)) {
-            throw new UsuarioValidationException("Nome invalido: use apenas letras.");
+            throw new UsuarioValidationException("Nome inválido: use apenas letras!");
         }
     }
 }

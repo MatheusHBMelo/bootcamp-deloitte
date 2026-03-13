@@ -87,7 +87,7 @@ class UsuarioServiceTest {
     @Test
     @DisplayName("Lança exceção quando alguma validação dos campos falhar")
     void deveLancarExcecaoQuandoValidacaoDeCamposFalhar() {
-        doThrow(new UsuarioValidationException("Campos inválidos"))
+        doThrow(new UsuarioValidationException("Campos inválidos!"))
                 .when(usuarioValidator).validaCamposDoUsuario(request);
 
         assertThrows(UsuarioValidationException.class,

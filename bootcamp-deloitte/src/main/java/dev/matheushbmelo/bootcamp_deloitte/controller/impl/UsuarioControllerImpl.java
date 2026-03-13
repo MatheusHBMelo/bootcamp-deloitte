@@ -1,5 +1,6 @@
 package dev.matheushbmelo.bootcamp_deloitte.controller.impl;
 
+import dev.matheushbmelo.bootcamp_deloitte.controller.UsuarioController;
 import dev.matheushbmelo.bootcamp_deloitte.controller.dto.UsuarioRequestDto;
 import dev.matheushbmelo.bootcamp_deloitte.controller.dto.UsuarioResponseDto;
 import dev.matheushbmelo.bootcamp_deloitte.service.UsuarioService;
@@ -11,10 +12,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/usuarios")
-public class UsuarioController {
+public class UsuarioControllerImpl implements UsuarioController {
     private final UsuarioService usuarioService;
 
-    public UsuarioController(UsuarioService usuarioService) {
+    public UsuarioControllerImpl(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
     }
 
