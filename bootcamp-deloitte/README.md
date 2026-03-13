@@ -30,7 +30,7 @@
 - Adicionado 100% de cobertura de testes unitários para a classe `UsuarioController`;
 - Adicionado 100% de cobertura de testes unitários para a classe `UsuarioService`.
 
-## v0.05 (Task 5: Aplicar SRP e OCP do conceito SOLID)
+### v0.05 (Task 5: Aplicar SRP e OCP do conceito SOLID)
 - Adiciona os métodos `removerUsuario` e `deletarUsuario` como transações;
 - Adiciona a interface `UsuarioValidation` com método para validar usuário;
 - Adiciona a classe `UsuarioValidator` como orquestrador das validações do campo de usuário conforme OCP;
@@ -42,3 +42,9 @@
 - Refatora a classe `UsuarioService` delegando as funções de validação e mapeio para suas devidas classes conforme SRP;
 - Adiciona validação para emails já existentes no método de adicionar novo usuário;
 - Adiciona teste unitário para `testar o fluxo completo criando um novo usuário` do desafio Extra.
+
+### v0.06 (Atualizações proprias autorizadas pelo professor)
+- Adiciona um readme documentando o projeto;
+- Corrige erros de escrita e incoerências;
+- Adiciona anotação do Lombok em classes com construtor;
+- Habilita Swagger UI no projeto.
