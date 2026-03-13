@@ -9,8 +9,11 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
     public String nome;
+    @Column(unique = true)
     public String email;
+    @Column(unique = true)
     public String cpf;
+    @Column(unique = true)
     public String telefone;
 
     public Usuario() {
