@@ -60,6 +60,8 @@ public class UsuarioService {
     public UsuarioResponseDto editarUsuario(Long id, UsuarioRequestDto usuarioEditado) {
         Usuario usuarioAtual = this.usuarioExistenteValidator.buscarUsuarioExistentePorId(id);
 
+        this.usuarioValidator.validarDadosEditados(usuarioEditado, id);
+
         this.usuarioMapper.atualizaCampos(usuarioAtual, usuarioEditado);
 
         return this.usuarioMapper.toResponseDto(this.usuarioRepository.save(usuarioAtual));

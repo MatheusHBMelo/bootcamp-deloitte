@@ -48,3 +48,14 @@
 - Corrige erros de escrita e incoerências;
 - Adiciona anotação do Lombok em classes com construtor;
 - Habilita Swagger UI no projeto.
+
+### v0.07 (Task 6: Criação do frontend da aplicação)
+- Cria página index.html com Bootstrap 5 e Alpine.js para consumo da API REST;
+- Implementa formulário de cadastro de usuário com validação de campos obrigatórios;
+- Implementa listagem de usuários em tabela;
+- Implementa funcionalidade de edição de usuário;
+- Implementa exclusão de usuário com modal de confirmação antes de deletar;
+- Adiciona tratamento de mensagens de erro retornadas pelo backend;
+- Adiciona paginação frontend com 7 registros por página;
+- Adiciona formatação de CPF e telefone na exibição da tabela;
+- Corrige validações do service para correta exibição de mensagens de erro no front.

@@ -142,6 +142,17 @@ Antes de começar, verifique o guia de testes:
 
 **O código presente na branch de test não está atualizado com os commits de aplicação do SOLID da branch master, portanto se você fizer o merge das duas branchs ocorrerá falhas nos testes.**
 
+## **📊 Frontend da aplicação**
+
+O frontend da aplicação foi criado em:
+- **HTML**: Para estruturar as seções da pagina.
+- **Bootstrap**: Para fornecer os templates html e css.
+- **Alpine.JS**: Para realizar a lógica de programação da conexão front-back;
+
+![Frontend Screenshot](./img/front-template.png)
+- O frontend está disponível em: http://localhost:8080
+
+
 ## **🚔 Licença**
 
 Este projeto está licenciado sob a Licença MIT.

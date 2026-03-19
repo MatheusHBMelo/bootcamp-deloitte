@@ -13,8 +13,8 @@ public class UsuarioMapperImpl implements UsuarioMapper {
         Usuario usuario = new Usuario();
         usuario.nome = usuarioRequestDto.nome();
         usuario.email = usuarioRequestDto.email();
-        usuario.cpf = usuarioRequestDto.cpf();
-        usuario.telefone = usuarioRequestDto.telefone();
+        usuario.cpf = usuarioRequestDto.cpf().replaceAll("\\D", "");
+        usuario.telefone = usuarioRequestDto.telefone().replaceAll("\\D", "");
 
         return usuario;
     }
@@ -26,9 +26,20 @@ public class UsuarioMapperImpl implements UsuarioMapper {
 
     @Override
     public void atualizaCampos(Usuario usuario, UsuarioRequestDto usuarioEditado) {
-        usuario.nome = usuarioEditado.nome();
-        usuario.email = usuarioEditado.email();
-        usuario.cpf = usuarioEditado.cpf();
-        usuario.telefone = usuarioEditado.telefone();
+        if (usuarioEditado.nome() != null && !usuarioEditado.nome().isBlank()) {
+            usuario.nome = usuarioEditado.nome();
+        }
+
+        if (usuarioEditado.email() != null && !usuarioEditado.email().isBlank()) {
+            usuario.email = usuarioEditado.email();
+        }
+
+        if (usuarioEditado.cpf() != null && !usuarioEditado.cpf().isBlank()) {
+            usuario.cpf = usuarioEditado.cpf().replaceAll("\\D", "");
+        }
+
+        if (usuarioEditado.telefone() != null && !usuarioEditado.telefone().isBlank()) {
+            usuario.telefone = usuarioEditado.telefone().replaceAll("\\D", "");
+        }
     }
 }
