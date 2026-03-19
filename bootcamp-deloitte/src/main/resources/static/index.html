@@ -82,7 +82,8 @@
         <div class="col-lg-4">
             <div class="card p-4">
                 <h5 class="fw-bold mb-4">
-                    <i class="bi bi-person-plus-fill text-primary me-2"></i>Cadastrar Usuário
+                    <i class="bi me-2" :class="editando ? 'bi-pencil-square text-warning' : 'bi-person-plus-fill text-primary'"></i>
+                    <span x-text="editando ? 'Editar Usuário' : 'Cadastrar Usuário'"></span>
                 </h5>
 
                 <div class="mb-3">
@@ -133,9 +134,18 @@
                     </div>
                 </div>
 
-                <button class="btn btn-primary fw-semibold w-100" @click="cadastrar()">
-                    <i class="bi bi-plus-lg me-1"></i>Cadastrar Usuário
-                </button>
+                <div class="d-grid gap-2">
+                    <button class="btn fw-semibold"
+                            :class="editando ? 'btn-warning' : 'btn-primary'"
+                            @click="editando ? atualizar() : cadastrar()">
+                        <i class="bi me-1" :class="editando ? 'bi-check-lg' : 'bi-plus-lg'"></i>
+                        <span x-text="editando ? 'Salvar Alterações' : 'Cadastrar Usuário'"></span>
+                    </button>
+
+                    <button class="btn btn-outline-secondary" x-show="editando" @click="cancelarEdicao()">
+                        <i class="bi bi-x-lg me-1"></i>Cancelar
+                    </button>
+                </div>
             </div>
         </div>
         <div class="col-lg-8">
@@ -156,6 +166,7 @@
                             <th>E-mail</th>
                             <th>CPF</th>
                             <th>Telefone</th>
+                            <th class="text-center">Ações</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -175,10 +186,42 @@
                                 <td class="text-muted small" x-text="u.email"></td>
                                 <td class="text-muted small" x-text="u.cpf"></td>
                                 <td class="text-muted small" x-text="u.telefone"></td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-warning" @click="editar(u)">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" @click="confirmarDelete(u)">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </td>
                             </tr>
                         </template>
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalDelete" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold text-danger">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmar Exclusão
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    Tem certeza que deseja excluir o usuário
+                    <strong x-text="usuarioParaDeletar?.nome"></strong>?
+                    <br>
+                    <small class="text-muted">Essa ação não pode ser desfeita.</small>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" @click="deletar()">
+                        <i class="bi bi-trash-fill me-1"></i>Excluir
+                    </button>
                 </div>
             </div>
         </div>
@@ -193,7 +236,10 @@
       const API_BASE = 'http://localhost:8080/usuarios';
 
       return {
+        usuarios: [],
         carregando: false,
+        editando: false,
+        usuarioParaDeletar: null,
         form: { id: null, nome: '', email: '', cpf: '', telefone: '' },
         erros: {},
         toast: { visivel: false, mensagem: '', tipo: 'sucesso' },
@@ -208,6 +254,60 @@
         } catch (e) {
             this.mostrarToast('Erro ao conectar com a API: ' + e.message, 'erro');
         } finally {
+                this.carregando = false;
+            }
+        },
+
+        editar(u) {
+            this.form = { ...u };
+            this.editando = true;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+
+        async atualizar() {
+            if (!this.validar()) return;
+            this.carregando = true;
+            try {
+                const res = await fetch(`${API_BASE}/${this.form.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(this.form)
+                });
+                if (!res.ok) throw new Error('Erro ao atualizar usuário');
+                await this.listar();
+                this.resetForm();
+                this.editando = false;
+                this.mostrarToast('Usuário atualizado com sucesso!', 'sucesso');
+            } catch (e) {
+                this.mostrarToast('Erro: ' + e.message, 'erro');
+            } finally {
+                this.carregando = false;
+            }
+        },
+
+        cancelarEdicao() {
+            this.resetForm();
+            this.editando = false;
+        },
+
+        confirmarDelete(u) {
+            this.usuarioParaDeletar = u;
+            new bootstrap.Modal(document.getElementById('modalDelete')).show();
+        },
+
+        async deletar() {
+            bootstrap.Modal.getInstance(document.getElementById('modalDelete')).hide();
+            this.carregando = true;
+            try {
+                const res = await fetch(`${API_BASE}/${this.usuarioParaDeletar.id}`, {
+                    method: 'DELETE'
+                });
+                if (!res.ok) throw new Error('Erro ao deletar usuário');
+                await this.listar();
+                this.mostrarToast('Usuário excluído com sucesso!', 'sucesso');
+            } catch (e) {
+                this.mostrarToast('Erro: ' + e.message, 'erro');
+            } finally {
                 this.carregando = false;
             }
         },
