@@ -26,11 +26,33 @@
           right: 1.5rem;
           z-index: 9999;
         }
+        .badge-id {
+        background: #e9ecef;
+        color: #495057;
+        font-size: .75rem;
+        font-weight: 600;
+        padding: 3px 8px;
+        border-radius: 20px;
+        }
+
+        .spinner-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(255,255,255,.6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9998; }
     </style>
 </head>
 <body>
 <!-- isso habilita do alpine js como se criasse um objeto -->
-<div x-data="usuarioApp()">
+<div x-data="usuarioApp()" x-init="listar()">
+
+    <div class="spinner-overlay" x-show="carregando">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
     <div class="toast-container">
         <div class="toast align-items-center border-0"
              :class="toast.tipo === 'sucesso' ? 'text-bg-success' : 'text-bg-danger'"
@@ -56,70 +78,112 @@
 
     <!-- container principal da tela, padrão do bootstrap -->
     <div class="container pb-5">
-        <!-- Um alinhamento legal para o meiol da tela -->
-        <div class="row justify-content-center">
-            <!-- Formulario do usuario com as variaveis mapeadas no spring -->
-            <div class="col-lg-5">
-                <div class="card p-4">
-                    <h5 class="fw-bold mb-4">
-                        <i class="bi bi-person-plus-fill text-primary me-2"></i>Cadastrar Usuário
+        <!-- Formulario do usuario com as variaveis mapeadas no spring -->
+        <div class="col-lg-4">
+            <div class="card p-4">
+                <h5 class="fw-bold mb-4">
+                    <i class="bi bi-person-plus-fill text-primary me-2"></i>Cadastrar Usuário
+                </h5>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Nome</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                        <input type="text" class="form-control" placeholder="Nome completo"
+                               x-model="form.nome"
+                               :class="erros.nome ? 'is-invalid' : ''"
+                        />
+                        <div class="invalid-feedback" x-text="erros.nome"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">E-mail</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="email" class="form-control" placeholder="email@exemplo.com"
+                               x-model="form.email"
+                               :class="erros.email ? 'is-invalid' : ''"
+                        />
+                        <div class="invalid-feedback" x-text="erros.email"></div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">CPF</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                        <input type="text" class="form-control" placeholder="000.000.000-00"
+                               x-model="form.cpf"
+                               :class="erros.cpf ? 'is-invalid' : ''"
+                        />
+                        <div class="invalid-feedback" x-text="erros.cpf"></div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-semibold">Telefone</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                        <input type="text" class="form-control" placeholder="(81) 99999-9999"
+                               x-model="form.telefone"
+                               :class="erros.telefone ? 'is-invalid' : ''"
+                        />
+                        <div class="invalid-feedback" x-text="erros.telefone"></div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary fw-semibold w-100" @click="cadastrar()">
+                    <i class="bi bi-plus-lg me-1"></i>Cadastrar Usuário
+                </button>
+            </div>
+        </div>
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                    <h5 class="mb-0 fw-bold">
+                        <i class="bi bi-list-ul me-2 text-primary"></i>Lista de Usuários
                     </h5>
+                    <span class="badge bg-primary rounded-pill" x-text="usuarios.length + ' registros'"></span>
+                </div>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">Nome</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-person"></i></span>
-                            <input type="text" class="form-control" placeholder="Nome completo"
-                                   x-model="form.nome"
-                                   :class="erros.nome ? 'is-invalid' : ''"
-                            />
-                            <div class="invalid-feedback" x-text="erros.nome"></div>
-                        </div>
-                    </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>CPF</th>
+                            <th>Telefone</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <template x-if="usuarios.length === 0">
+                            <tr>
+                                <td colspan="5" class="text-center text-muted py-5">
+                                    <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                                    Nenhum usuário cadastrado.
+                                </td>
+                            </tr>
+                        </template>
 
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">E-mail</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                            <input type="email" class="form-control" placeholder="email@exemplo.com"
-                                   x-model="form.email"
-                                   :class="erros.email ? 'is-invalid' : ''"
-                            />
-                            <div class="invalid-feedback" x-text="erros.email"></div>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold">CPF</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-card-text"></i></span>
-                            <input type="text" class="form-control" placeholder="000.000.000-00"
-                                   x-model="form.cpf"
-                                   :class="erros.cpf ? 'is-invalid' : ''"
-                            />
-                            <div class="invalid-feedback" x-text="erros.cpf"></div>
-                        </div>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-semibold">Telefone</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                            <input type="text" class="form-control" placeholder="(81) 99999-9999"
-                                   x-model="form.telefone"
-                                   :class="erros.telefone ? 'is-invalid' : ''"
-                            />
-                            <div class="invalid-feedback" x-text="erros.telefone"></div>
-                        </div>
-                    </div>
-
-                    <button class="btn btn-primary fw-semibold w-100" @click="cadastrar()">
-                        <i class="bi bi-plus-lg me-1"></i>Cadastrar Usuário
-                    </button>
+                        <template x-for="u in usuarios" :key="u.id">
+                            <tr>
+                                <td><span class="badge-id" x-text="u.id"></span></td>
+                                <td class="fw-semibold" x-text="u.nome"></td>
+                                <td class="text-muted small" x-text="u.email"></td>
+                                <td class="text-muted small" x-text="u.cpf"></td>
+                                <td class="text-muted small" x-text="u.telefone"></td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -129,14 +193,29 @@
       const API_BASE = 'http://localhost:8080/usuarios';
 
       return {
+        carregando: false,
         form: { id: null, nome: '', email: '', cpf: '', telefone: '' },
         erros: {},
         toast: { visivel: false, mensagem: '', tipo: 'sucesso' },
 
-        // Cadastrar
+        // Listar os usuarios do crud
+        async listar() {
+        this.carregando = true;
+        try {
+            const res = await fetch(API_BASE);
+            if (!res.ok) throw new Error('Erro ao buscar usuários');
+            this.usuarios = await res.json();
+        } catch (e) {
+            this.mostrarToast('Erro ao conectar com a API: ' + e.message, 'erro');
+        } finally {
+                this.carregando = false;
+            }
+        },
+
+        // Cadastrar os usuarios do crud
         async cadastrar() {
           if (!this.validar()) return;
-
+          this.carregando = true;
           try {
             const res = await fetch(API_BASE, {
               method: 'POST',
@@ -145,11 +224,13 @@
             });
 
             if (!res.ok) throw new Error('Erro ao cadastrar usuário');
-
+            await this.listar();
             this.resetForm();
             this.mostrarToast('Usuário cadastrado com sucesso!', 'sucesso');
           } catch (e) {
             this.mostrarToast('Erro: ' + e.message, 'erro');
+          } finally {
+            this.carregando = false;
           }
         },
 
