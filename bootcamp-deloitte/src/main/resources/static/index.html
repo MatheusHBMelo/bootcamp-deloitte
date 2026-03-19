@@ -22,8 +22,9 @@
         }
         .toast-container {
           position: fixed;
-          bottom: 1.5rem;
-          right: 1.5rem;
+          top: 1.5rem;
+          left: 50%;
+          transform: translateX(-50%);
           z-index: 9999;
         }
         .badge-id {
@@ -54,16 +55,16 @@
     </div>
 
     <div class="toast-container">
-        <div class="toast align-items-center border-0"
-             :class="toast.tipo === 'sucesso' ? 'text-bg-success' : 'text-bg-danger'"
-             x-show="toast.visivel"
-             x-transition
-             role="alert">
-            <div class="d-flex">
-                <div class="toast-body fw-semibold" x-text="toast.mensagem"></div>
-                <button class="btn-close btn-close-white me-2 m-auto" @click="toast.visivel = false"></button>
+        <template x-if="toast.visivel">
+            <div class="toast align-items-center border-0 show"
+                 :class="toast.tipo === 'sucesso' ? 'text-bg-success' : 'text-bg-danger'"
+                 role="alert">
+                <div class="d-flex">
+                    <div class="toast-body fw-semibold" x-text="toast.mensagem"></div>
+                    <button class="btn-close btn-close-white me-2 m-auto" @click="toast.visivel = false"></button>
+                </div>
             </div>
-        </div>
+        </template>
     </div>
 
     <!-- Essa parte coloca um navbar azul com o nome do projeto e meu nome-->
@@ -79,125 +80,149 @@
     <!-- container principal da tela, padrão do bootstrap -->
     <div class="container pb-5">
         <!-- Formulario do usuario com as variaveis mapeadas no spring -->
-        <div class="col-lg-4">
-            <div class="card p-4">
-                <h5 class="fw-bold mb-4">
-                    <i class="bi me-2" :class="editando ? 'bi-pencil-square text-warning' : 'bi-person-plus-fill text-primary'"></i>
-                    <span x-text="editando ? 'Editar Usuário' : 'Cadastrar Usuário'"></span>
-                </h5>
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-4">
+                        <i class="bi me-2"
+                           :class="editando ? 'bi-pencil-square text-warning' : 'bi-person-plus-fill text-primary'"></i>
+                        <span x-text="editando ? 'Editar Usuário' : 'Cadastrar Usuário'"></span>
+                    </h5>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">Nome</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-person"></i></span>
-                        <input type="text" class="form-control" placeholder="Nome completo"
-                               x-model="form.nome"
-                               :class="erros.nome ? 'is-invalid' : ''"
-                        />
-                        <div class="invalid-feedback" x-text="erros.nome"></div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nome</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input type="text" class="form-control" placeholder="Nome completo"
+                                   x-model="form.nome"
+                                   :class="erros.nome ? 'is-invalid' : ''"
+                            />
+                            <div class="invalid-feedback" x-text="erros.nome"></div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">E-mail</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                        <input type="email" class="form-control" placeholder="email@exemplo.com"
-                               x-model="form.email"
-                               :class="erros.email ? 'is-invalid' : ''"
-                        />
-                        <div class="invalid-feedback" x-text="erros.email"></div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">E-mail</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control" placeholder="email@exemplo.com"
+                                   x-model="form.email"
+                                   :class="erros.email ? 'is-invalid' : ''"
+                            />
+                            <div class="invalid-feedback" x-text="erros.email"></div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-3">
-                    <label class="form-label fw-semibold">CPF</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-card-text"></i></span>
-                        <input type="text" class="form-control" placeholder="000.000.000-00"
-                               x-model="form.cpf"
-                               :class="erros.cpf ? 'is-invalid' : ''"
-                        />
-                        <div class="invalid-feedback" x-text="erros.cpf"></div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">CPF</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-card-text"></i></span>
+                            <input type="text" class="form-control" placeholder="000.000.000-00"
+                                   x-model="form.cpf"
+                                   :class="erros.cpf ? 'is-invalid' : ''"
+                            />
+                            <div class="invalid-feedback" x-text="erros.cpf"></div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="mb-4">
-                    <label class="form-label fw-semibold">Telefone</label>
-                    <div class="input-group">
-                        <span class="input-group-text"><i class="bi bi-telephone"></i></span>
-                        <input type="text" class="form-control" placeholder="(81) 99999-9999"
-                               x-model="form.telefone"
-                               :class="erros.telefone ? 'is-invalid' : ''"
-                        />
-                        <div class="invalid-feedback" x-text="erros.telefone"></div>
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Telefone</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                            <input type="text" class="form-control" placeholder="81999999999"
+                                   x-model="form.telefone"
+                                   :class="erros.telefone ? 'is-invalid' : ''"
+                            />
+                            <div class="invalid-feedback" x-text="erros.telefone"></div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="d-grid gap-2">
-                    <button class="btn fw-semibold"
-                            :class="editando ? 'btn-warning' : 'btn-primary'"
-                            @click="editando ? atualizar() : cadastrar()">
-                        <i class="bi me-1" :class="editando ? 'bi-check-lg' : 'bi-plus-lg'"></i>
-                        <span x-text="editando ? 'Salvar Alterações' : 'Cadastrar Usuário'"></span>
-                    </button>
+                    <div class="d-grid gap-2">
+                        <button class="btn fw-semibold"
+                                :class="editando ? 'btn-warning' : 'btn-primary'"
+                                @click="editando ? atualizar() : cadastrar()">
+                            <i class="bi me-1" :class="editando ? 'bi-check-lg' : 'bi-plus-lg'"></i>
+                            <span x-text="editando ? 'Salvar Alterações' : 'Cadastrar Usuário'"></span>
+                        </button>
 
-                    <button class="btn btn-outline-secondary" x-show="editando" @click="cancelarEdicao()">
-                        <i class="bi bi-x-lg me-1"></i>Cancelar
-                    </button>
+                        <button class="btn btn-outline-secondary" x-show="editando" @click="cancelarEdicao()">
+                            <i class="bi bi-x-lg me-1"></i>Cancelar
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-lg-8">
-            <div class="card">
-                <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
-                    <h5 class="mb-0 fw-bold">
-                        <i class="bi bi-list-ul me-2 text-primary"></i>Lista de Usuários
-                    </h5>
-                    <span class="badge bg-primary rounded-pill" x-text="usuarios.length + ' registros'"></span>
-                </div>
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-list-ul me-2 text-primary"></i>Lista de Usuários
+                        </h5>
+                        <span class="badge bg-primary rounded-pill" x-text="usuarios.length + ' registros'"></span>
+                    </div>
 
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>E-mail</th>
-                            <th>CPF</th>
-                            <th>Telefone</th>
-                            <th class="text-center">Ações</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <template x-if="usuarios.length === 0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
                             <tr>
-                                <td colspan="5" class="text-center text-muted py-5">
-                                    <i class="bi bi-inbox fs-2 d-block mb-2"></i>
-                                    Nenhum usuário cadastrado.
-                                </td>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>E-mail</th>
+                                <th>CPF</th>
+                                <th>Telefone</th>
+                                <th class="text-center">Ações</th>
                             </tr>
-                        </template>
+                            </thead>
+                            <tbody>
+                            <template x-if="usuarios.length === 0">
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-5">
+                                        <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                                        Nenhum usuário cadastrado.
+                                    </td>
+                                </tr>
+                            </template>
 
-                        <template x-for="u in usuarios" :key="u.id">
-                            <tr>
-                                <td><span class="badge-id" x-text="u.id"></span></td>
-                                <td class="fw-semibold" x-text="u.nome"></td>
-                                <td class="text-muted small" x-text="u.email"></td>
-                                <td class="text-muted small" x-text="u.cpf"></td>
-                                <td class="text-muted small" x-text="u.telefone"></td>
-                                <td class="text-center">
-                                    <button class="btn btn-sm btn-warning" @click="editar(u)">
-                                        <i class="bi bi-pencil-fill"></i>
-                                    </button>
-                                    <button class="btn btn-sm btn-danger" @click="confirmarDelete(u)">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        </template>
-                        </tbody>
-                    </table>
+                            <template x-for="u in usuariosPaginados" :key="u.id">
+                                <tr>
+                                    <td><span class="badge-id" x-text="u.id"></span></td>
+                                    <td class="fw-semibold" x-text="u.nome"></td>
+                                    <td class="text-muted small" x-text="u.email"></td>
+                                    <td class="text-muted small" x-text="formatarCPF(u.cpf)"></td>
+                                    <td class="text-muted small" x-text="formatarTelefone(u.telefone)"></td>
+                                    <td class="text-center">
+                                        <button class="btn btn-sm btn-warning" @click="editar(u)">
+                                            <i class="bi bi-pencil-fill"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" @click="confirmarDelete(u)">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                            </tbody>
+                        </table>
+                        <div class="d-flex justify-content-center align-items-center py-3 gap-2" x-show="totalPaginas > 1">
+                            <button class="btn btn-sm btn-outline-primary"
+                                    :disabled="paginaAtual === 1"
+                                    @click="paginaAtual--">
+                                <i class="bi bi-chevron-left"></i>
+                            </button>
+
+                            <template x-for="p in totalPaginas" :key="p">
+                                <button class="btn btn-sm"
+                                        :class="paginaAtual === p ? 'btn-primary' : 'btn-outline-primary'"
+                                        @click="paginaAtual = p"
+                                        x-text="p">
+                                </button>
+                            </template>
+
+                            <button class="btn btn-sm btn-outline-primary"
+                                    :disabled="paginaAtual === totalPaginas"
+                                    @click="paginaAtual++">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -214,8 +239,6 @@
                 <div class="modal-body">
                     Tem certeza que deseja excluir o usuário
                     <strong x-text="usuarioParaDeletar?.nome"></strong>?
-                    <br>
-                    <small class="text-muted">Essa ação não pode ser desfeita.</small>
                 </div>
                 <div class="modal-footer border-0">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -227,22 +250,34 @@
         </div>
     </div>
 </div>
-</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
     function usuarioApp() {
-      const API_BASE = 'http://localhost:8080/usuarios';
+      const API_BASE = '/usuarios';
 
       return {
         usuarios: [],
         carregando: false,
         editando: false,
         usuarioParaDeletar: null,
+        paginaAtual: 1,
+        porPagina: 7,
         form: { id: null, nome: '', email: '', cpf: '', telefone: '' },
         erros: {},
         toast: { visivel: false, mensagem: '', tipo: 'sucesso' },
+
+        // Cordena a paginação da lista de usuarios
+        get totalPaginas() {
+            return Math.ceil(this.usuarios.length / this.porPagina);
+        },
+
+        get usuariosPaginados() {
+            const inicio = (this.paginaAtual - 1) * this.porPagina;
+            const fim = inicio + this.porPagina;
+            return this.usuarios.slice(inicio, fim);
+        },
 
         // Listar os usuarios do crud
         async listar() {
@@ -251,6 +286,7 @@
             const res = await fetch(API_BASE);
             if (!res.ok) throw new Error('Erro ao buscar usuários');
             this.usuarios = await res.json();
+            this.paginaAtual = 1;
         } catch (e) {
             this.mostrarToast('Erro ao conectar com a API: ' + e.message, 'erro');
         } finally {
@@ -264,6 +300,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         },
 
+        // Função que atualiza o usuario com validação
         async atualizar() {
             if (!this.validar()) return;
             this.carregando = true;
@@ -273,13 +310,16 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(this.form)
                 });
-                if (!res.ok) throw new Error('Erro ao atualizar usuário');
+                if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data.error);
+                }
                 await this.listar();
                 this.resetForm();
                 this.editando = false;
                 this.mostrarToast('Usuário atualizado com sucesso!', 'sucesso');
             } catch (e) {
-                this.mostrarToast('Erro: ' + e.message, 'erro');
+                this.mostrarToast(e.message, 'erro');
             } finally {
                 this.carregando = false;
             }
@@ -295,6 +335,7 @@
             new bootstrap.Modal(document.getElementById('modalDelete')).show();
         },
 
+        // Função que deleta um usuario
         async deletar() {
             bootstrap.Modal.getInstance(document.getElementById('modalDelete')).hide();
             this.carregando = true;
@@ -302,11 +343,14 @@
                 const res = await fetch(`${API_BASE}/${this.usuarioParaDeletar.id}`, {
                     method: 'DELETE'
                 });
-                if (!res.ok) throw new Error('Erro ao deletar usuário');
+                if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data.error);
+                }
                 await this.listar();
                 this.mostrarToast('Usuário excluído com sucesso!', 'sucesso');
             } catch (e) {
-                this.mostrarToast('Erro: ' + e.message, 'erro');
+                this.mostrarToast(e.message, 'erro');
             } finally {
                 this.carregando = false;
             }
@@ -323,18 +367,21 @@
               body: JSON.stringify(this.form)
             });
 
-            if (!res.ok) throw new Error('Erro ao cadastrar usuário');
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.error);
+            }
             await this.listar();
             this.resetForm();
             this.mostrarToast('Usuário cadastrado com sucesso!', 'sucesso');
           } catch (e) {
-            this.mostrarToast('Erro: ' + e.message, 'erro');
+            this.mostrarToast(e.message, 'erro');
           } finally {
             this.carregando = false;
           }
         },
 
-        // Validação
+        // Validação dos campos
         validar() {
           this.erros = {};
           if (!this.form.nome?.trim())     this.erros.nome     = 'Nome é obrigatório.';
@@ -350,9 +397,20 @@
           this.erros = {};
         },
 
+        // Mostra as mensagens de erro
         mostrarToast(mensagem, tipo = 'sucesso') {
           this.toast = { visivel: true, mensagem, tipo };
-          setTimeout(() => this.toast.visivel = false, 3500);
+          setTimeout(() => this.toast.visivel = false, 6000);
+        },
+
+        formatarCPF(v) {
+            return v.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+        },
+
+        formatarTelefone(v) {
+            if (v.length === 11)
+                return v.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+            return v.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
         },
       };
     }
