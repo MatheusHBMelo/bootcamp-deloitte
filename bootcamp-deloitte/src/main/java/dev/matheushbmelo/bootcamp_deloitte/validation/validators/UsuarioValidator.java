@@ -53,5 +53,21 @@ public class UsuarioValidator {
                 }
             });
         }
+
+        if (usuarioEditado.cpf() != null && !usuarioEditado.cpf().isBlank()) {
+            String cpfLimpo = usuarioEditado.cpf().replaceAll("\\D", "");
+
+            if (cpfLimpo.length() != 11 || !cpfLimpo.matches("\\d{11}")) {
+                throw new UsuarioValidationException("Erro ao editar: O CPF deve ter 11 dígitos.");
+            }
+        }
+
+        if (usuarioEditado.telefone() != null && !usuarioEditado.telefone().isBlank()) {
+            String telefoneLimpo = usuarioEditado.telefone().replaceAll("\\D", "");
+
+            if (telefoneLimpo.length() < 9 || telefoneLimpo.length() > 11 || !telefoneLimpo.matches("\\d+")) {
+                throw new UsuarioValidationException("Erro ao editar: O telefone deve ter 9 ou 11 dígitos.");
+            }
+        }
     }
 }
